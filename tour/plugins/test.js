@@ -1,37 +1,19 @@
-const name = "TestPlugin";
-
-const compilerHooks = [
-	"environment",
-	"afterEnvironment",
-	"entryOption",
-	"afterPlugins",
-	"afterResolvers",
-	"initialize",
-	"beforeRun",
-	"run",
-	"normalModuleFactory",
-	"contextModuleFactory",
-	"beforeCompile",
-	"compile",
-	"thisCompilation",
-	"compilation",
-	"make",
-	"finishMake",
-	"afterCompile",
-	"shouldEmit",
-	"emit",
-	"afterEmit",
-	"done",
-	"afterDone"
-];
+const { SyncHook } = require("tapable");
+const {
+	Compiler,
+	NormalModuleFactory,
+	ContextModuleFactory,
+	Compilation
+} = require("../utils/types");
 
 class TestPlugins {
 	apply(compiler) {
-		let events = [];
-		compilerHooks.forEach(item => {
-			compiler.hooks[item].tap(name, params => {
-				events.push(item);
-				console.log(item);
+		Object.keys(compiler.hooks).forEach(hook => {
+			compiler.hooks[hook].tap(hook, (a, b) => {
+				console.log(`${hook} start----------------------------------------`);
+				if (a) console.log(a);
+				if (b) console.log(b);
+				console.log(`------------------------------------------${hook} end`);
 			});
 		});
 	}
